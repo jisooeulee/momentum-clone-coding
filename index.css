@@ -1,0 +1,22 @@
+body {
+    background-color: whitesmoke;
+    color: #34495e;
+}
+
+/* 클래스 태그가 clicked인 것에 색을 설정 */
+.clicked {
+    color: #7f8c8d;
+}
+
+.btn {
+    cursor: pointer;
+}
+
+.form,
+.greetings {
+    display: none;
+}
+
+.showing {
+    display: block;
+}
