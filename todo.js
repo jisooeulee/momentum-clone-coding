@@ -41,7 +41,6 @@ function paintTodo(text) {
     delBtn.innerText = "❌";
     delBtn.addEventListener("click", deleteTodo);
 
-
     span.innerText = text;
     li.appendChild(delBtn);
     li.appendChild(span);
