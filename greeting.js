@@ -1,5 +1,4 @@
 // html에서 어떤 값을 제어할 것인지 정한다.
-
 var form = document.querySelector('.js-form');
 var input = form.querySelector('input');
 var greeting = document.querySelector('.js-greetings');
@@ -31,7 +30,6 @@ function askForName() {
     form.addEventListener('submit', handleSubmit);
 }
 
-// 필요한 기능(요구사항)을 구현한다.
 function loadName() {
     var currentUser = localStorage.getItem(USER_LS);
     if (currentUser === null) {
