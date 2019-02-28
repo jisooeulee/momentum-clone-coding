@@ -1,21 +1,35 @@
-const COORDS = 'coords';
+const API_KEY = "49bf77da2ad98961e26baab45f5aba4d";
+const WEATHER_API = "https://api.openweathermap.org/data/2.5/weather?";
 
-function saveCoords(coordsObj) {
-    localStorage.setItem(COORDS, JSON.stringify(coordsObj));
+var weather = document.querySelector('js-weather');
+
+function getWeather(coords) {
+    fetch(
+        `${WEATHER_API}lat=${coords.lat}&lon=${
+            coords.lng
+            }&appid=${API_KEY}&units=metric`
+    )
+        .then(response => response.json())
+        .then(json => {
+            const name = json.name;
+            const temperature = json.main.temp;
+            weather.innerHTML = `${Math.floor(temperature)}° @ ${name}`;
+
+    }); // https://와 appid는 내가 넣어준다.
 }
 
 function handleGeoSuccess(position) {
-    console.log(position);
-    var latitude = position.coords.latitude;
-    var longitude = position.coords.longitude;
-    var coordsObj = {
-        latitude: latitude,
-        longitude: longitude
+    var lat = position.coords.latitude;
+    var lng = position.coords.longitude;
+    var coords = {
+        lat,
+        lng
     };
-    saveCoords(coordsObj);
+    localStorage.setItem("coords", JSON.stringify(coords));
+    getWeather(coords);
 }
 
-function handleGeoError() {
+function handleGeoFailure() {
     console.log("Can't access geo location");
     //console.log(onmessageerror);
 }
@@ -23,20 +37,24 @@ function handleGeoError() {
 // 좌표를 요청
 function askForCoords() {
     // DOM APIs가 제공하는 navigator API를 이용한다.
-    navigator.geolocation.getCurrentPosition(handleGeoSuccess, handleGeoError); // .getCurrentPosition()의 첫번째 인자 : 좌표를 가져오는데 성공했을 때를 처리하는 함수.
+    navigator.geolocation.getCurrentPosition(handleGeoSuccess, handleGeoFailure); // .getCurrentPosition()의 첫번째 인자 : 좌표를 가져오는데 성공했을 때를 처리하는 함수.
 }
 
-function loadCoords() {
-    var loadedCords = localStorage.getItem(COORDS);
-    if (loadedCords === null) {
-        askForCoords();
+function loadWeather() {
+    var currentCoords = localStorage.getItem("coords");
+    if (currentCoords !== null) {
+        const parsedCoords = JSON.parse(currentCoords);
+        getWeather(parsedCoords);
+        return;
     } else {
-        // getWeather
+        navigator.geolocation.getCurrentPosition(
+            handleGeoSuccess,
+            handleGeoFailure
+        );
     }
 }
-
 function init() {
-    loadCoords();
+    loadWeather();
 }
 
 init();
